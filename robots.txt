@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://oathanrex.github.io/keysearchpro/sitemap.xml
