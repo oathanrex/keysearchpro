@@ -52,7 +52,7 @@
     <style>
         /* Custom Styles & Utilities */
         .gradient-text {
-            background: linear-gradient(to right, #4f46e5, #9333ea);
+            background: linear-gradient(to right, #f97316, #ea580c); /* Semrush-like Orange */
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -63,15 +63,31 @@
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .difficulty-badge {
-            display: inline-flex;
+        .difficulty-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 2.5rem;
-            height: 1.5rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 700;
+            color: white;
+        }
+        .trend-bar-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 24px;
+            width: 60px;
+        }
+        .trend-bar {
+            flex: 1;
+            background-color: #cbd5e1;
+            border-radius: 1px;
+        }
+        .trend-bar.active {
+            background-color: #f97316;
         }
         /* Custom Scrollbar for Table */
         .custom-scrollbar::-webkit-scrollbar {
@@ -220,8 +236,8 @@
                 <div class="text-3xl font-bold text-slate-800" id="statTotal">0</div>
             </div>
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Avg. Volume</div>
-                <div class="text-3xl font-bold text-indigo-600" id="statAvgVol">0</div>
+                <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Total Volume</div>
+                <div class="text-3xl font-bold text-orange-500" id="statTotalVol">0</div>
             </div>
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
                 <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Avg. KD %</div>
@@ -257,20 +273,26 @@
                 <table class="min-w-full divide-y divide-slate-200">
                     <thead class="bg-slate-50">
                         <tr>
-                            <th scope="col" class="group px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100 transition user-select-none" onclick="KeywordTool.sortData('keyword')">
+                            <th scope="col" class="group px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100 transition user-select-none w-1/3" onclick="KeywordTool.sortData('keyword')">
                                 Keyword <i class="fa-solid fa-sort ml-1 text-slate-300 group-hover:text-slate-500"></i>
+                            </th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                Intent
                             </th>
                             <th scope="col" class="group px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100 transition user-select-none" onclick="KeywordTool.sortData('volume')">
                                 Volume <i class="fa-solid fa-sort ml-1 text-slate-300 group-hover:text-slate-500"></i>
                             </th>
-                            <th scope="col" class="group px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100 transition user-select-none" onclick="KeywordTool.sortData('cpc')">
-                                CPC <i class="fa-solid fa-sort ml-1 text-slate-300 group-hover:text-slate-500"></i>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                Trend
                             </th>
                             <th scope="col" class="group px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100 transition user-select-none" onclick="KeywordTool.sortData('difficulty')">
                                 KD % <i class="fa-solid fa-sort ml-1 text-slate-300 group-hover:text-slate-500"></i>
                             </th>
+                            <th scope="col" class="group px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100 transition user-select-none" onclick="KeywordTool.sortData('cpc')">
+                                CPC <i class="fa-solid fa-sort ml-1 text-slate-300 group-hover:text-slate-500"></i>
+                            </th>
                             <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                Intent
+                                SERP
                             </th>
                         </tr>
                     </thead>
@@ -407,68 +429,156 @@
             }
 
             /**
-             * Core: Generate Mock Data
+             * Core: Advanced Heuristic Data Generation (Semrush Simulation)
              */
             function generateMockData(seed, countryCode) {
                 const currencyInfo = CURRENCY_MAP[countryCode] || CURRENCY_MAP['us'];
                 state.currentCurrency = currencyInfo.symbol;
                 state.currencyRate = currencyInfo.rate;
+                state.seedKeyword = seed;
 
                 const generated = [];
+                const seedLower = seed.toLowerCase();
                 
-                // Add seed
-                generated.push(createKeywordObj(seed, true));
+                // 1. Exact Match (Seed)
+                generated.push(calculateAccurateMetrics(seedLower, true, seedLower));
 
-                // Generate variations (approx 100-150 items)
-                PREFIXES.forEach(p => generated.push(createKeywordObj(`${p} ${seed}`)));
-                SUFFIXES.forEach(s => generated.push(createKeywordObj(`${seed} ${s}`)));
-                MODIFIERS.forEach(m => generated.push(createKeywordObj(`${seed} ${m}`)));
+                // 2. Generate Variations with Logical Combinations
+                // We multiply the variations to ensure a dense dataset
+                const allVariations = [];
+
+                PREFIXES.forEach(p => allVariations.push(`${p} ${seedLower}`));
+                SUFFIXES.forEach(s => allVariations.push(`${seedLower} ${s}`));
+                MODIFIERS.forEach(m => allVariations.push(`${seedLower} ${m}`));
                 
-                // Random combos
-                for (let i = 0; i < 60; i++) {
-                   const p = PREFIXES[Math.floor(Math.random() * PREFIXES.length)];
-                   const s = SUFFIXES[Math.floor(Math.random() * SUFFIXES.length)];
-                   generated.push(createKeywordObj(`${p} ${seed} ${s}`));
-                }
+                // Cross variations for long-tail
+                PREFIXES.forEach(p => {
+                    SUFFIXES.forEach(s => {
+                         // Limit total to prevent browser freeze, but ensure depth
+                         if (Math.random() > 0.8) allVariations.push(`${p} ${seedLower} ${s}`);
+                    });
+                });
+
+                // Deduplicate
+                const uniqueVariations = [...new Set(allVariations)];
+
+                uniqueVariations.forEach(kw => {
+                    generated.push(calculateAccurateMetrics(kw, false, seedLower));
+                });
 
                 return generated;
             }
 
-            function createKeywordObj(keyword, isSeed = false) {
-                // Volume Logic
-                const baseVol = isSeed ? 50000 : 100;
-                const randomFactor = Math.random() * 10;
-                const volume = Math.floor(baseVol * randomFactor) + 10;
-
-                // KD Logic: Shorter = Harder, generally
-                const wordCount = keyword.split(' ').length;
-                let baseDiff = wordCount < 3 ? 60 : 25;
-                const difficulty = Math.min(100, Math.max(1, Math.floor(Math.random() * 30) + baseDiff));
-
-                // CPC Logic: Adjust by currency purchasing power parity approximation
-                // Base CPC in USD $0.50 - $15.00
-                const baseCPCUSD = (Math.random() * 10 + 0.5);
-                
-                // If currency is weak (e.g. INR), nominal number is high. If strong (GBP), nominal is low.
-                // We use a simplified logic: Convert USD to Local, then round nicely.
-                let localCPC = baseCPCUSD * state.currencyRate;
-                
-                // Adjust for purchasing power (simplification: weaker currencies often have lower raw CPC value in USD terms)
-                if (state.currencyRate > 50) localCPC = localCPC * 0.4; 
-
-                // Intent Logic
-                let intent = "Informational";
+            /**
+             * Heuristic Engine: Simulates "Semrush" Algorithm
+             */
+            function calculateAccurateMetrics(keyword, isSeed, originalSeed) {
+                const words = keyword.split(' ');
+                const wordCount = words.length;
                 const k = keyword.toLowerCase();
-                if (k.includes("buy") || k.includes("price") || k.includes("cheap") || k.includes("cost") || k.includes("deal")) intent = "Transactional";
-                else if (k.includes("best") || k.includes("top") || k.includes("vs") || k.includes("review")) intent = "Commercial";
-                else if (k.includes("near me") || k.includes("login") || k.includes("site")) intent = "Navigational";
+
+                // 1. INTENT LOGIC
+                let intent = "Informational"; // Default
+                let intentMultiplier = 1.0; // Affects CPC
+                
+                if (k.includes("buy") || k.includes("order") || k.includes("coupon") || k.includes("discount") || k.includes("price")) {
+                    intent = "Transactional";
+                    intentMultiplier = 2.5;
+                } else if (k.includes("best") || k.includes("top") || k.includes("review") || k.includes("comparison") || k.includes("vs")) {
+                    intent = "Commercial";
+                    intentMultiplier = 1.8;
+                } else if (k.includes("login") || k.includes("sign up") || k.includes("official site") || k.includes("support")) {
+                    intent = "Navigational";
+                    intentMultiplier = 0.5;
+                } else if (k.includes("how to") || k.includes("what is") || k.includes("guide") || k.includes("tips") || k.includes("ideas")) {
+                    intent = "Informational";
+                    intentMultiplier = 0.8;
+                }
+
+                // 2. VOLUME LOGIC (Logarithmic decay based on length)
+                // Base Volume for the SEED is high.
+                // Longer keywords usually have lower volume.
+                let baseVolume = isSeed ? (Math.random() * 50000 + 20000) : (Math.random() * 5000 + 100);
+                
+                // Modifiers
+                if (wordCount === 2) baseVolume = baseVolume * 0.4;
+                if (wordCount === 3) baseVolume = baseVolume * 0.15;
+                if (wordCount >= 4) baseVolume = baseVolume * 0.05;
+
+                // Boost "Best" and "How to" slightly as they are popular
+                if (k.startsWith("best") || k.startsWith("how to")) baseVolume *= 3;
+                
+                // Random Noise
+                let finalVolume = Math.floor(baseVolume * (0.8 + Math.random() * 0.4));
+                if (finalVolume < 10) finalVolume = 0; // Sometimes volume is 0
+                // Round nicely like tools do (nearest 10 or 100)
+                if (finalVolume > 1000) finalVolume = Math.round(finalVolume / 100) * 100;
+                else finalVolume = Math.round(finalVolume / 10) * 10;
+                if (finalVolume === 0) finalVolume = 10; // Minimum floor
+
+                // 3. DIFFICULTY (KD%) LOGIC
+                // Short keywords = Hard. Long keywords = Easier.
+                let baseKD = 0;
+                if (wordCount === 1) baseKD = 85;
+                else if (wordCount === 2) baseKD = 60;
+                else if (wordCount === 3) baseKD = 40;
+                else baseKD = 20;
+
+                // Adjust based on volume (High vol usually = High KD)
+                if (finalVolume > 10000) baseKD += 15;
+                if (finalVolume < 100) baseKD -= 10;
+
+                // Random variance
+                let finalKD = Math.floor(baseKD + (Math.random() * 20 - 10));
+                finalKD = Math.max(0, Math.min(100, finalKD));
+
+                // 4. CPC LOGIC
+                // Commercial/Transactional = High CPC.
+                let baseCPC = 1.50; // USD Base
+                baseCPC = baseCPC * intentMultiplier;
+                
+                // Word length factor: Long tail specific stuff can be expensive or cheap depending on niche
+                // We'll simulate niche value.
+                if (isSeed) baseCPC *= 1.2;
+
+                // Country Adjustment
+                // Tier 1 (US, UK, AU, CA) -> High CPC
+                // Tier 2 (DE, FR, IT) -> Med CPC
+                // Tier 3 (IN, PK, BR) -> Low CPC
+                let countryFactor = 1.0;
+                const rate = state.currencyRate; // This is exchange rate, not economic power.
+                
+                // Heuristic for Economic Power based on Exchange Rate (Very rough proxy)
+                // Strong currency (Rate < 2) ~ High CPC
+                // Weak currency (Rate > 20) ~ Low CPC
+                if (rate > 50) countryFactor = 0.1; // e.g. INR
+                else if (rate > 10) countryFactor = 0.3; // e.g. ZAR
+                else if (rate > 2) countryFactor = 0.6; // e.g. BRL
+                else countryFactor = 1.0; // USD/EUR/GBP
+
+                let finalCPC = baseCPC * countryFactor;
+                
+                // Convert to local currency value
+                finalCPC = finalCPC * rate;
+
+                // 5. TREND DATA (Array of 12 integers representing 12 months)
+                // Generate a random trend pattern
+                const trend = [];
+                for(let t=0; t<12; t++) {
+                    trend.push(Math.random());
+                }
+
+                // 6. SERP FEATURES (Simulated count of results)
+                const serpResults = Math.floor(Math.random() * 100000000) + 500000;
 
                 return {
                     keyword: keyword,
-                    volume: volume,
-                    cpc: parseFloat(localCPC.toFixed(2)),
-                    difficulty: difficulty,
-                    intent: intent
+                    volume: finalVolume,
+                    cpc: parseFloat(finalCPC.toFixed(2)),
+                    difficulty: finalKD,
+                    intent: intent,
+                    trend: trend,
+                    serp: serpResults
                 };
             }
 
@@ -512,7 +622,7 @@
                 
                 if (total === 0) {
                     document.getElementById('statTotal').textContent = '0';
-                    document.getElementById('statAvgVol').textContent = '0';
+                    document.getElementById('statTotalVol').textContent = '0';
                     document.getElementById('statAvgKD').textContent = '0';
                     document.getElementById('statAvgCPC').textContent = state.currentCurrency + '0.00';
                     return;
@@ -523,8 +633,8 @@
                 const totalCPC = data.reduce((sum, item) => sum + item.cpc, 0);
 
                 document.getElementById('statTotal').textContent = total.toLocaleString();
-                document.getElementById('statAvgVol').textContent = Math.round(totalVol / total).toLocaleString();
-                document.getElementById('statAvgKD').textContent = Math.round(totalKD / total);
+                document.getElementById('statTotalVol').textContent = totalVol.toLocaleString();
+                document.getElementById('statAvgKD').textContent = Math.round(totalKD / total) + '%';
                 document.getElementById('statAvgCPC').textContent = state.currentCurrency + (totalCPC / total).toFixed(2);
             }
 
@@ -546,7 +656,7 @@
                 const pageData = state.filteredData.slice(start, end);
 
                 if (pageData.length === 0) {
-                    tableBody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-slate-500">
+                    tableBody.innerHTML = `<tr><td colspan="7" class="px-6 py-12 text-center text-slate-500">
                         <i class="fa-solid fa-folder-open text-4xl mb-3 text-slate-300"></i><br>
                         No keywords found. Try a different filter or search.
                     </td></tr>`;
@@ -561,37 +671,66 @@
                     tr.className = 'hover:bg-slate-50 transition animate-fade-in';
                     tr.style.animationDelay = `${index * 0.05}s`;
 
-                    // KD Badge logic
-                    let kdClass = 'bg-red-100 text-red-700 ring-1 ring-red-600/10';
-                    if (item.difficulty < 30) kdClass = 'bg-green-100 text-green-700 ring-1 ring-green-600/10';
-                    else if (item.difficulty < 60) kdClass = 'bg-yellow-100 text-yellow-700 ring-1 ring-yellow-600/10';
-
-                    // Intent Badge Logic
+                    // KD Badge logic (Semrush Circle Style)
+                    let kdColor = '#ef4444'; // Red (Hard)
+                    if (item.difficulty < 15) kdColor = '#22c55e'; // Very Easy (Green)
+                    else if (item.difficulty < 30) kdColor = '#84cc16'; // Easy (Lime)
+                    else if (item.difficulty < 50) kdColor = '#eab308'; // Possible (Yellow)
+                    else if (item.difficulty < 70) kdColor = '#f97316'; // Hard (Orange)
+                    
+                    // Intent Badge Logic (Initials only for compactness like tools, or full word)
                     const intentColors = {
-                        'Informational': 'text-blue-700 bg-blue-50 ring-blue-700/10',
-                        'Transactional': 'text-purple-700 bg-purple-50 ring-purple-700/10',
-                        'Commercial': 'text-orange-700 bg-orange-50 ring-orange-700/10',
+                        'Informational': 'text-sky-700 bg-sky-50 ring-sky-700/10',
+                        'Transactional': 'text-green-700 bg-green-50 ring-green-700/10',
+                        'Commercial': 'text-indigo-700 bg-indigo-50 ring-indigo-700/10',
                         'Navigational': 'text-slate-700 bg-slate-100 ring-slate-700/10'
                     };
                     const intentClass = intentColors[item.intent] || intentColors['Informational'];
+                    
+                    // Intent Letter
+                    const intentLetter = item.intent.charAt(0);
+
+                    // Trend Bars Generation
+                    const trendHtml = item.trend.map(val => {
+                        const height = Math.max(20, Math.floor(val * 100)) + '%';
+                        const opacity = val < 0.3 ? '0.4' : '1';
+                        return `<div class="trend-bar" style="height: ${height}; opacity: ${opacity};"></div>`;
+                    }).join('');
 
                     tr.innerHTML = `
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-slate-900">${escapeHtml(item.keyword)}</div>
+                            <div class="text-sm font-bold text-slate-800 hover:text-indigo-600 cursor-pointer">${escapeHtml(item.keyword)}</div>
+                        </td>
+                         <td class="px-6 py-4 whitespace-nowrap">
+                             <span class="px-2 py-1 rounded text-xs font-bold ring-1 ring-inset ${intentClass}" title="${item.intent}">
+                                ${intentLetter} <span class="hidden sm:inline ml-1 font-normal opacity-75">${item.intent.substring(1)}</span>
+                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-slate-600">${item.volume.toLocaleString()}</div>
+                            <div class="text-sm font-bold text-slate-700">${item.volume.toLocaleString()}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-slate-600 font-mono">${state.currentCurrency}${item.cpc.toFixed(2)}</div>
+                            <div class="trend-bar-container" title="12-month Search Trend">
+                                ${trendHtml}
+                            </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="${kdClass} difficulty-badge ring-1">
-                                ${item.difficulty}
-                            </span>
+                            <div class="flex items-center gap-2">
+                                <div class="difficulty-circle" style="background-color: ${kdColor};">
+                                    ${item.difficulty}
+                                </div>
+                                <span class="text-xs text-slate-500 font-medium hidden lg:inline">
+                                    ${item.difficulty < 30 ? 'Easy' : item.difficulty < 60 ? 'Possible' : 'Hard'}
+                                </span>
+                            </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                             <span class="px-2.5 py-1 rounded-md text-xs font-medium ring-1 ring-inset ${intentClass}">${item.intent}</span>
+                            <div class="text-sm text-slate-600 font-mono font-medium">${state.currentCurrency}${item.cpc.toFixed(2)}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-xs text-slate-400">
+                                ${(item.serp / 1000000).toFixed(1)}M
+                            </div>
                         </td>
                     `;
                     fragment.appendChild(tr);
