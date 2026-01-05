@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Keyword Research Tool - Unlimited SEO Analysis | Oathan Rex</title>
+    <meta name="description" content="Discover high-volume, low-competition keywords with this free keyword research tool. Unlimited searches, detailed metrics, and CSV export. Developed by Oathan Rex.">
+    <meta name="keywords" content="free keyword research tool, seo tool, keyword generator, keyword difficulty checker, oathan rex, unlimited keyword research, seo analysis">
+    <meta name="author" content="Oathan Rex">
+    <link rel="canonical" href="https://oathanrex.github.io/">
+
+    <!-- Schema.org for Google Rich Results -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "KeySearchPro - Free Keyword Research Tool",
+      "operatingSystem": "Web Browser",
+      "applicationCategory": "SEOSoftware",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Oathan Rex",
+        "url": "https://github.com/oathanrex"
+      },
+      "description": "A powerful free keyword research tool to find high-volume, low-competition keywords for SEO strategies."
+    }
+    </script>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://oathanrex.github.io/">
+    <meta property="og:title" content="Free Keyword Research Tool - Unlimited SEO Analysis | Oathan Rex">
+    <meta property="og:description" content="Discover high-volume, low-competition keywords with this free tool. Unlimited searches and CSV export.">
+    <meta property="og:image" content="https://oathanrex.github.io/og-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://oathanrex.github.io/">
+    <meta property="twitter:title" content="Free Keyword Research Tool by Oathan Rex">
+    <meta property="twitter:description" content="Discover winning keywords for your SEO strategy with this free tool.">
+    <meta property="twitter:image" content="https://oathanrex.github.io/og-image.jpg">
+
+    <link rel="icon" type="image/png" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/svgs/solid/magnifying-glass-chart.svg">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Custom Styles & Utilities */
+        .gradient-text {
+            background: linear-gradient(to right, #4f46e5, #9333ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .difficulty-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 1.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        /* Custom Scrollbar for Table */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 font-sans flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center cursor-pointer" onclick="window.location.reload()">
+                    <i class="fa-solid fa-magnifying-glass-chart text-indigo-600 text-2xl mr-3"></i>
+                    <span class="font-bold text-xl tracking-tight">KeySearch<span class="text-indigo-600">Pro</span></span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="#features" class="hidden md:block text-slate-500 hover:text-indigo-600 transition font-medium">Features</a>
+                    <a href="https://github.com/oathanrex" class="text-slate-500 hover:text-indigo-600 transition font-medium hidden md:block" target="_blank">About Author</a>
+                    <a href="https://github.com/oathanrex" target="_blank" class="bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-800 transition flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 duration-200">
+                        <i class="fa-brands fa-github"></i> <span>GitHub</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="max-w-4xl mx-auto px-4 pt-16 pb-8 text-center">
+        <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+            Find Winning Keywords <br>
+            <span class="gradient-text">In Seconds</span>
+        </h1>
+        <p class="text-lg text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+            Discover high-volume, low-competition keywords to boost your SEO strategy. 
+            Enter a seed keyword below to generate hundreds of ideas instantly.
+        </p>
+
+        <!-- Search Box -->
+        <div class="bg-white p-2 rounded-xl shadow-xl border border-slate-200 flex flex-col md:flex-row gap-3 max-w-3xl mx-auto transition-all duration-300 focus-within:shadow-2xl focus-within:border-indigo-300">
+            <div class="relative flex-grow">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fa-solid fa-search text-slate-400"></i>
+                </div>
+                <input type="text" id="seedKeyword" 
+                    class="block w-full pl-11 pr-3 py-4 border-none rounded-lg focus:ring-0 focus:outline-none text-lg text-slate-800 placeholder-slate-400" 
+                    placeholder="Enter a keyword (e.g. 'vegan recipes')" aria-label="Seed Keyword">
+            </div>
+            
+            <div class="relative min-w-[180px] border-t md:border-t-0 md:border-l border-slate-100">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fa-solid fa-earth-americas text-slate-400"></i>
+                </div>
+                <select id="countrySelect" class="block w-full pl-11 pr-10 py-4 bg-white text-slate-600 text-base focus:ring-0 focus:outline-none cursor-pointer appearance-none rounded-lg" aria-label="Select Country">
+                    <optgroup label="Popular">
+                        <option value="us" selected>United States ($)</option>
+                        <option value="gb">United Kingdom (£)</option>
+                        <option value="in">India (₹)</option>
+                        <option value="ca">Canada (C$)</option>
+                        <option value="au">Australia (A$)</option>
+                    </optgroup>
+                    <optgroup label="Europe">
+                        <option value="de">Germany (€)</option>
+                        <option value="fr">France (€)</option>
+                        <option value="es">Spain (€)</option>
+                        <option value="it">Italy (€)</option>
+                        <option value="nl">Netherlands (€)</option>
+                        <option value="se">Sweden (kr)</option>
+                        <option value="tr">Turkey (₺)</option>
+                        <option value="ru">Russia (₽)</option>
+                    </optgroup>
+                    <optgroup label="Asia & Pacific">
+                        <option value="jp">Japan (¥)</option>
+                        <option value="cn">China (¥)</option>
+                        <option value="id">Indonesia (Rp)</option>
+                        <option value="pk">Pakistan (Rs)</option>
+                        <option value="kr">South Korea (₩)</option>
+                        <option value="vn">Vietnam (₫)</option>
+                    </optgroup>
+                    <optgroup label="Americas & Africa">
+                        <option value="br">Brazil (R$)</option>
+                        <option value="mx">Mexico (MX$)</option>
+                        <option value="za">South Africa (R)</option>
+                        <option value="ae">UAE (AED)</option>
+                    </optgroup>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
+                    <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>
+                </div>
+            </div>
+
+            <button onclick="KeywordTool.initSearch()" class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-bold text-lg hover:bg-indigo-700 transition shadow-md hover:shadow-lg transform active:scale-95 duration-200 flex justify-center items-center gap-2">
+                <span>Analyze</span> <i class="fa-solid fa-arrow-right text-sm"></i>
+            </button>
+        </div>
+        
+        <p class="text-xs text-slate-400 mt-4">* Demo Mode: Metrics are simulated based on country selection.</p>
+    </header>
+
+    <!-- Features Grid -->
+    <section id="features" class="max-w-7xl mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition group">
+                <div class="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center mb-4 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300">
+                    <i class="fa-solid fa-bolt text-xl"></i>
+                </div>
+                <h3 class="font-bold text-lg mb-2 text-slate-800">Instant Analysis</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">Get hundreds of keyword suggestions in seconds with real-time analysis of search intent and competition.</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition group">
+                <div class="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center mb-4 text-green-600 group-hover:bg-green-600 group-hover:text-white transition-colors duration-300">
+                    <i class="fa-solid fa-file-csv text-xl"></i>
+                </div>
+                <h3 class="font-bold text-lg mb-2 text-slate-800">Free Export</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">Download your complete keyword dataset in CSV format. No sign-up required, completely free to use.</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition group">
+                <div class="w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center mb-4 text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
+                    <i class="fa-solid fa-chart-simple text-xl"></i>
+                </div>
+                <h3 class="font-bold text-lg mb-2 text-slate-800">Detailed Metrics</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">View comprehensive data including Search Volume, CPC, and Keyword Difficulty to make informed decisions.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <main id="resultsSection" class="hidden max-w-7xl mx-auto px-4 pb-20 w-full">
+        
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Total Keywords</div>
+                <div class="text-3xl font-bold text-slate-800" id="statTotal">0</div>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Avg. Volume</div>
+                <div class="text-3xl font-bold text-indigo-600" id="statAvgVol">0</div>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Avg. KD %</div>
+                <div class="text-3xl font-bold text-slate-800" id="statAvgKD">0</div>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Avg. CPC</div>
+                <div class="text-3xl font-bold text-green-600" id="statAvgCPC">$0.00</div>
+            </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="flex flex-col md:flex-row justify-between items-center mb-5 gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                <button onclick="KeywordTool.setFilter('all')" class="flex-1 md:flex-none px-4 py-2 rounded-lg text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-indigo-500 filter-btn active" data-filter="all">
+                    All
+                </button>
+                <button onclick="KeywordTool.setFilter('easy')" class="flex-1 md:flex-none px-4 py-2 rounded-lg text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-indigo-500 filter-btn" data-filter="easy">
+                    Easy (KD < 30)
+                </button>
+                <button onclick="KeywordTool.setFilter('high-vol')" class="flex-1 md:flex-none px-4 py-2 rounded-lg text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-indigo-500 filter-btn" data-filter="high-vol">
+                    High Volume
+                </button>
+            </div>
+            <button onclick="KeywordTool.exportCSV()" class="w-full md:w-auto px-5 py-2 bg-slate-800 text-white rounded-lg text-sm font-medium hover:bg-slate-700 transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-download"></i> Export CSV
+            </button>
+        </div>
+
+        <!-- Table -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+            <div class="overflow-x-auto custom-scrollbar">
+                <table class="min-w-full divide-y divide-slate-200">
+                    <thead class="bg-slate-50">
+                        <tr>
+                            <th scope="col" class="group px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100 transition user-select-none" onclick="KeywordTool.sortData('keyword')">
+                                Keyword <i class="fa-solid fa-sort ml-1 text-slate-300 group-hover:text-slate-500"></i>
+                            </th>
+                            <th scope="col" class="group px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100 transition user-select-none" onclick="KeywordTool.sortData('volume')">
+                                Volume <i class="fa-solid fa-sort ml-1 text-slate-300 group-hover:text-slate-500"></i>
+                            </th>
+                            <th scope="col" class="group px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100 transition user-select-none" onclick="KeywordTool.sortData('cpc')">
+                                CPC <i class="fa-solid fa-sort ml-1 text-slate-300 group-hover:text-slate-500"></i>
+                            </th>
+                            <th scope="col" class="group px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100 transition user-select-none" onclick="KeywordTool.sortData('difficulty')">
+                                KD % <i class="fa-solid fa-sort ml-1 text-slate-300 group-hover:text-slate-500"></i>
+                            </th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                Intent
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTableBody" class="bg-white divide-y divide-slate-200">
+                        <!-- Rows injected via JS -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            <div id="paginationContainer" class="bg-white px-4 py-3 flex items-center justify-between border-t border-slate-200 sm:px-6">
+                <!-- Pagination injected via JS -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loadingState" class="hidden fixed inset-0 bg-white/90 backdrop-blur-sm z-50 flex flex-col items-center justify-center">
+        <div class="relative">
+            <div class="w-16 h-16 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <i class="fa-solid fa-magnifying-glass text-indigo-600 text-xl animate-pulse"></i>
+            </div>
+        </div>
+        <h2 class="mt-6 text-xl font-bold text-slate-800">Analyzing Search Data...</h2>
+        <p class="text-slate-500 mt-2 text-center max-w-xs" id="loadingText">Fetching volume, CPC, and competition metrics</p>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-300 py-12 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="col-span-1 md:col-span-2">
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-magnifying-glass-chart text-indigo-500 text-2xl mr-3"></i>
+                    <span class="font-bold text-xl text-white tracking-tight">KeySearch<span class="text-indigo-500">Pro</span></span>
+                </div>
+                <p class="text-sm text-slate-400 max-w-sm leading-relaxed">
+                    The ultimate free keyword research tool for digital marketers, SEO professionals, and content creators. Visualize data, find opportunities, and rank higher.
+                    <br><br>
+                    Developed by <strong>Oathan Rex</strong>.
+                </p>
+            </div>
+            <div>
+                <h3 class="text-white font-semibold mb-4 uppercase text-xs tracking-wider">Product</h3>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="#features" class="hover:text-white transition">Features</a></li>
+                    <li><a href="#" class="hover:text-white transition">How it Works</a></li>
+                    <li><a href="https://github.com/oathanrex" class="hover:text-white transition">Source Code</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-white font-semibold mb-4 uppercase text-xs tracking-wider">Connect</h3>
+                <div class="flex space-x-4">
+                    <a href="https://github.com/oathanrex" class="w-8 h-8 rounded bg-slate-800 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition text-slate-400">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                    <a href="#" class="w-8 h-8 rounded bg-slate-800 flex items-center justify-center hover:bg-blue-400 hover:text-white transition text-slate-400">
+                        <i class="fa-brands fa-twitter"></i>
+                    </a>
+                    <a href="#" class="w-8 h-8 rounded bg-slate-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition text-slate-400">
+                        <i class="fa-brands fa-linkedin-in"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-slate-800 text-sm text-slate-500 flex flex-col md:flex-row justify-between items-center">
+            <p>&copy; 2024 Oathan Rex. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        /**
+         * KeySearchPro - Core Application Logic
+         * Using Module Pattern for Encapsulation
+         */
+        const KeywordTool = (function() {
+            // State
+            let state = {
+                allData: [],
+                filteredData: [],
+                currentPage: 1,
+                itemsPerPage: 10,
+                sortColumn: 'volume',
+                sortDirection: 'desc',
+                activeFilter: 'all',
+                currentCurrency: '$',
+                currencyRate: 1.0,
+                seedKeyword: ''
+            };
+
+            // Currency Configuration
+            const CURRENCY_MAP = {
+                'us': { symbol: '$', rate: 1.0 },
+                'gb': { symbol: '£', rate: 0.78 },
+                'in': { symbol: '₹', rate: 83.0 },
+                'ca': { symbol: 'C$', rate: 1.35 },
+                'au': { symbol: 'A$', rate: 1.52 },
+                'de': { symbol: '€', rate: 0.92 },
+                'fr': { symbol: '€', rate: 0.92 },
+                'es': { symbol: '€', rate: 0.92 },
+                'it': { symbol: '€', rate: 0.92 },
+                'nl': { symbol: '€', rate: 0.92 },
+                'br': { symbol: 'R$', rate: 5.0 },
+                'jp': { symbol: '¥', rate: 150.0 },
+                'cn': { symbol: '¥', rate: 7.2 },
+                'ru': { symbol: '₽', rate: 92.0 },
+                'se': { symbol: 'kr', rate: 10.5 },
+                'tr': { symbol: '₺', rate: 31.0 },
+                'ae': { symbol: 'AED', rate: 3.67 },
+                'pk': { symbol: 'Rs', rate: 278.0 },
+                'id': { symbol: 'Rp', rate: 15600.0 },
+                'za': { symbol: 'R', rate: 19.0 },
+                'kr': { symbol: '₩', rate: 1330.0 },
+                'vn': { symbol: '₫', rate: 24500.0 },
+                'mx': { symbol: 'MX$', rate: 17.0 }
+            };
+
+            // Data Generation Constants
+            const PREFIXES = ["best", "top", "cheap", "buy", "how to", "free", "guide to", "easy", "reviews of", "alternatives to", "affordable", "compare", "deals on", "discount"];
+            const SUFFIXES = ["for beginners", "near me", "2024", "online", "tutorial", "vs", "software", "examples", "benefits", "cost", "price", "course", "services", "pdf", "app"];
+            const MODIFIERS = ["best", "cheap", "top rated", "affordable", "professional", "luxury", "budget", "fastest", "secure"];
+
+            /**
+             * Utility: Escape HTML to prevent XSS
+             */
+            function escapeHtml(unsafe) {
+                if (typeof unsafe !== 'string') return unsafe;
+                return unsafe
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
+            /**
+             * Core: Generate Mock Data
+             */
+            function generateMockData(seed, countryCode) {
+                const currencyInfo = CURRENCY_MAP[countryCode] || CURRENCY_MAP['us'];
+                state.currentCurrency = currencyInfo.symbol;
+                state.currencyRate = currencyInfo.rate;
+
+                const generated = [];
+                
+                // Add seed
+                generated.push(createKeywordObj(seed, true));
+
+                // Generate variations (approx 100-150 items)
+                PREFIXES.forEach(p => generated.push(createKeywordObj(`${p} ${seed}`)));
+                SUFFIXES.forEach(s => generated.push(createKeywordObj(`${seed} ${s}`)));
+                MODIFIERS.forEach(m => generated.push(createKeywordObj(`${seed} ${m}`)));
+                
+                // Random combos
+                for (let i = 0; i < 60; i++) {
+                   const p = PREFIXES[Math.floor(Math.random() * PREFIXES.length)];
+                   const s = SUFFIXES[Math.floor(Math.random() * SUFFIXES.length)];
+                   generated.push(createKeywordObj(`${p} ${seed} ${s}`));
+                }
+
+                return generated;
+            }
+
+            function createKeywordObj(keyword, isSeed = false) {
+                // Volume Logic
+                const baseVol = isSeed ? 50000 : 100;
+                const randomFactor = Math.random() * 10;
+                const volume = Math.floor(baseVol * randomFactor) + 10;
+
+                // KD Logic: Shorter = Harder, generally
+                const wordCount = keyword.split(' ').length;
+                let baseDiff = wordCount < 3 ? 60 : 25;
+                const difficulty = Math.min(100, Math.max(1, Math.floor(Math.random() * 30) + baseDiff));
+
+                // CPC Logic: Adjust by currency purchasing power parity approximation
+                // Base CPC in USD $0.50 - $15.00
+                const baseCPCUSD = (Math.random() * 10 + 0.5);
+                
+                // If currency is weak (e.g. INR), nominal number is high. If strong (GBP), nominal is low.
+                // We use a simplified logic: Convert USD to Local, then round nicely.
+                let localCPC = baseCPCUSD * state.currencyRate;
+                
+                // Adjust for purchasing power (simplification: weaker currencies often have lower raw CPC value in USD terms)
+                if (state.currencyRate > 50) localCPC = localCPC * 0.4; 
+
+                // Intent Logic
+                let intent = "Informational";
+                const k = keyword.toLowerCase();
+                if (k.includes("buy") || k.includes("price") || k.includes("cheap") || k.includes("cost") || k.includes("deal")) intent = "Transactional";
+                else if (k.includes("best") || k.includes("top") || k.includes("vs") || k.includes("review")) intent = "Commercial";
+                else if (k.includes("near me") || k.includes("login") || k.includes("site")) intent = "Navigational";
+
+                return {
+                    keyword: keyword,
+                    volume: volume,
+                    cpc: parseFloat(localCPC.toFixed(2)),
+                    difficulty: difficulty,
+                    intent: intent
+                };
+            }
+
+            /**
+             * Operations: Sorting & Filtering
+             */
+            function processData() {
+                // 1. Filter
+                let processed = state.allData.filter(item => {
+                    if (state.activeFilter === 'easy') return item.difficulty < 30;
+                    if (state.activeFilter === 'high-vol') return item.volume > 1000;
+                    return true;
+                });
+
+                // 2. Sort
+                processed.sort((a, b) => {
+                    let valA = a[state.sortColumn];
+                    let valB = b[state.sortColumn];
+
+                    if (typeof valA === 'string') {
+                        valA = valA.toLowerCase();
+                        valB = valB.toLowerCase();
+                    }
+
+                    if (valA < valB) return state.sortDirection === 'asc' ? -1 : 1;
+                    if (valA > valB) return state.sortDirection === 'asc' ? 1 : -1;
+                    return 0;
+                });
+
+                state.filteredData = processed;
+                updateStats();
+                renderTable();
+            }
+
+            /**
+             * UI: Update Statistics
+             */
+            function updateStats() {
+                const data = state.filteredData;
+                const total = data.length;
+                
+                if (total === 0) {
+                    document.getElementById('statTotal').textContent = '0';
+                    document.getElementById('statAvgVol').textContent = '0';
+                    document.getElementById('statAvgKD').textContent = '0';
+                    document.getElementById('statAvgCPC').textContent = state.currentCurrency + '0.00';
+                    return;
+                }
+
+                const totalVol = data.reduce((sum, item) => sum + item.volume, 0);
+                const totalKD = data.reduce((sum, item) => sum + item.difficulty, 0);
+                const totalCPC = data.reduce((sum, item) => sum + item.cpc, 0);
+
+                document.getElementById('statTotal').textContent = total.toLocaleString();
+                document.getElementById('statAvgVol').textContent = Math.round(totalVol / total).toLocaleString();
+                document.getElementById('statAvgKD').textContent = Math.round(totalKD / total);
+                document.getElementById('statAvgCPC').textContent = state.currentCurrency + (totalCPC / total).toFixed(2);
+            }
+
+            /**
+             * UI: Render Table
+             */
+            function renderTable() {
+                const tableBody = document.getElementById('resultsTableBody');
+                tableBody.innerHTML = ''; // Clear current
+
+                const totalItems = state.filteredData.length;
+                const totalPages = Math.ceil(totalItems / state.itemsPerPage);
+
+                // Bounds check
+                if (state.currentPage > totalPages) state.currentPage = 1;
+
+                const start = (state.currentPage - 1) * state.itemsPerPage;
+                const end = start + state.itemsPerPage;
+                const pageData = state.filteredData.slice(start, end);
+
+                if (pageData.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-slate-500">
+                        <i class="fa-solid fa-folder-open text-4xl mb-3 text-slate-300"></i><br>
+                        No keywords found. Try a different filter or search.
+                    </td></tr>`;
+                    renderPagination(0, 0, 0, 0);
+                    return;
+                }
+
+                const fragment = document.createDocumentFragment();
+
+                pageData.forEach((item, index) => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-slate-50 transition animate-fade-in';
+                    tr.style.animationDelay = `${index * 0.05}s`;
+
+                    // KD Badge logic
+                    let kdClass = 'bg-red-100 text-red-700 ring-1 ring-red-600/10';
+                    if (item.difficulty < 30) kdClass = 'bg-green-100 text-green-700 ring-1 ring-green-600/10';
+                    else if (item.difficulty < 60) kdClass = 'bg-yellow-100 text-yellow-700 ring-1 ring-yellow-600/10';
+
+                    // Intent Badge Logic
+                    const intentColors = {
+                        'Informational': 'text-blue-700 bg-blue-50 ring-blue-700/10',
+                        'Transactional': 'text-purple-700 bg-purple-50 ring-purple-700/10',
+                        'Commercial': 'text-orange-700 bg-orange-50 ring-orange-700/10',
+                        'Navigational': 'text-slate-700 bg-slate-100 ring-slate-700/10'
+                    };
+                    const intentClass = intentColors[item.intent] || intentColors['Informational'];
+
+                    tr.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-slate-900">${escapeHtml(item.keyword)}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-slate-600">${item.volume.toLocaleString()}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-slate-600 font-mono">${state.currentCurrency}${item.cpc.toFixed(2)}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="${kdClass} difficulty-badge ring-1">
+                                ${item.difficulty}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                             <span class="px-2.5 py-1 rounded-md text-xs font-medium ring-1 ring-inset ${intentClass}">${item.intent}</span>
+                        </td>
+                    `;
+                    fragment.appendChild(tr);
+                });
+
+                tableBody.appendChild(fragment);
+                renderPagination(totalItems, totalPages, start + 1, Math.min(end, totalItems));
+            }
+
+            /**
+             * UI: Render Pagination
+             */
+            function renderPagination(totalItems, totalPages, startRange, endRange) {
+                const container = document.getElementById('paginationContainer');
+                
+                if (totalItems === 0) {
+                    container.innerHTML = '';
+                    return;
+                }
+
+                // Previous Button
+                const prevDisabled = state.currentPage === 1;
+                const nextDisabled = state.currentPage === totalPages;
+
+                let html = `
+                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-sm text-slate-700">
+                            Showing <span class="font-medium">${startRange}</span> to <span class="font-medium">${endRange}</span> of <span class="font-medium">${totalItems}</span> results
+                        </p>
+                    </div>
+                    <div>
+                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                            <button onclick="KeywordTool.changePage(${state.currentPage - 1})" ${prevDisabled ? 'disabled' : ''} class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-slate-300 bg-white text-sm font-medium ${prevDisabled ? 'text-slate-300 cursor-not-allowed' : 'text-slate-500 hover:bg-slate-50'}">
+                                <span class="sr-only">Previous</span>
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                `;
+
+                // Page Numbers Logic (Simplified Window)
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === 1 || i === totalPages || (i >= state.currentPage - 1 && i <= state.currentPage + 1)) {
+                        const activeClass = i === state.currentPage 
+                            ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600' 
+                            : 'bg-white text-slate-700 hover:bg-slate-50 border-slate-300';
+                        
+                        html += `<button onclick="KeywordTool.changePage(${i})" class="relative inline-flex items-center px-4 py-2 border text-sm font-medium ${activeClass}">${i}</button>`;
+                    } else if (i === state.currentPage - 2 || i === state.currentPage + 2) {
+                        html += `<span class="relative inline-flex items-center px-4 py-2 border border-slate-300 bg-slate-50 text-sm font-medium text-slate-700">...</span>`;
+                    }
+                }
+
+                html += `
+                            <button onclick="KeywordTool.changePage(${state.currentPage + 1})" ${nextDisabled ? 'disabled' : ''} class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-slate-300 bg-white text-sm font-medium ${nextDisabled ? 'text-slate-300 cursor-not-allowed' : 'text-slate-500 hover:bg-slate-50'}">
+                                <span class="sr-only">Next</span>
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+                
+                <!-- Mobile View -->
+                <div class="flex items-center justify-between sm:hidden w-full">
+                    <button onclick="KeywordTool.changePage(${state.currentPage - 1})" ${prevDisabled ? 'disabled' : ''} class="relative inline-flex items-center px-4 py-2 border border-slate-300 text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50 ${prevDisabled ? 'opacity-50 cursor-not-allowed' : ''}">
+                        Previous
+                    </button>
+                    <span class="text-sm text-slate-700">Page ${state.currentPage} of ${totalPages}</span>
+                    <button onclick="KeywordTool.changePage(${state.currentPage + 1})" ${nextDisabled ? 'disabled' : ''} class="relative inline-flex items-center px-4 py-2 border border-slate-300 text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50 ${nextDisabled ? 'opacity-50 cursor-not-allowed' : ''}">
+                        Next
+                    </button>
+                </div>
+                `;
+
+                container.innerHTML = html;
+            }
+
+            /**
+             * Public API
+             */
+            return {
+                initSearch: function() {
+                    const seed = document.getElementById('seedKeyword').value.trim();
+                    const country = document.getElementById('countrySelect').value;
+                    
+                    if (!seed) {
+                        const input = document.getElementById('seedKeyword');
+                        input.focus();
+                        input.classList.add('ring-2', 'ring-red-400');
+                        setTimeout(() => input.classList.remove('ring-2', 'ring-red-400'), 1000);
+                        return;
+                    }
+
+                    // Loading UI
+                    const loader = document.getElementById('loadingState');
+                    const loaderText = document.getElementById('loadingText');
+                    loader.classList.remove('hidden');
+                    
+                    // Simulate step messages
+                    setTimeout(() => loaderText.textContent = `Scanning ${country.toUpperCase()} database...`, 500);
+                    setTimeout(() => loaderText.textContent = "Analyzing keyword difficulty...", 1000);
+                    setTimeout(() => loaderText.textContent = "Aggregating search volume...", 1500);
+
+                    // Logic delay
+                    setTimeout(() => {
+                        state.seedKeyword = seed;
+                        state.allData = generateMockData(seed, country);
+                        
+                        // Reset Filters/Sort
+                        state.currentPage = 1;
+                        state.activeFilter = 'all';
+                        state.sortColumn = 'volume';
+                        state.sortDirection = 'desc';
+                        
+                        // Update Filter UI
+                        document.querySelectorAll('.filter-btn').forEach(btn => {
+                            btn.classList.remove('text-indigo-600', 'bg-indigo-50', 'border', 'border-indigo-200');
+                            btn.classList.add('bg-white', 'border-slate-200');
+                            if(btn.dataset.filter === 'all') {
+                                btn.classList.add('text-indigo-600', 'bg-indigo-50', 'border-indigo-200', 'border');
+                                btn.classList.remove('border-slate-200');
+                            }
+                        });
+
+                        processData();
+
+                        loader.classList.add('hidden');
+                        const resultsSection = document.getElementById('resultsSection');
+                        resultsSection.classList.remove('hidden');
+                        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                    }, 2000);
+                },
+
+                sortData: function(column) {
+                    if (state.sortColumn === column) {
+                        state.sortDirection = state.sortDirection === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        state.sortColumn = column;
+                        state.sortDirection = 'desc';
+                    }
+                    processData();
+                },
+
+                setFilter: function(filterType) {
+                    state.activeFilter = filterType;
+                    state.currentPage = 1;
+
+                    // UI Update
+                    document.querySelectorAll('.filter-btn').forEach(btn => {
+                        if (btn.dataset.filter === filterType) {
+                            btn.classList.add('text-indigo-600', 'bg-indigo-50', 'border-indigo-200', 'border');
+                            btn.classList.remove('bg-white', 'border-slate-200');
+                        } else {
+                            btn.classList.remove('text-indigo-600', 'bg-indigo-50', 'border-indigo-200', 'border');
+                            btn.classList.add('bg-white', 'border-slate-200');
+                        }
+                    });
+
+                    processData();
+                },
+
+                changePage: function(page) {
+                    state.currentPage = page;
+                    renderTable();
+                    // Optional: scroll to top of table
+                    document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                },
+
+                exportCSV: function() {
+                    const data = state.filteredData;
+                    if (data.length === 0) return;
+
+                    const headers = ["Keyword", "Volume", "CPC", "Difficulty", "Intent"];
+                    const csvRows = [headers.join(",")];
+
+                    data.forEach(row => {
+                        const values = [
+                            `"${row.keyword.replace(/"/g, '""')}"`, // Escape quotes
+                            row.volume,
+                            row.cpc,
+                            row.difficulty,
+                            row.intent
+                        ];
+                        csvRows.push(values.join(","));
+                    });
+
+                    const blob = new Blob([csvRows.join("\n")], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement("a");
+                    link.setAttribute("href", url);
+                    link.setAttribute("download", `keywords-${state.seedKeyword.replace(/\s+/g, '-')}.csv`);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            };
+        })();
+
+        // Expose to global window scope to ensure HTML onclick handlers work
+        window.KeywordTool = KeywordTool;
+
+        // Event Listeners
+        document.getElementById('seedKeyword').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') KeywordTool.initSearch();
+        });
+    </script>
+</body>
+</html>
